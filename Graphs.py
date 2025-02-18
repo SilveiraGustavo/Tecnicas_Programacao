@@ -54,6 +54,15 @@ def construir_matriz_adjacencia():
 
     return matriz  # Retorna a matriz de adjacência
 
+# Função para calcular a centralidade de grau de cada aeroporto
+def calcular_centralidade_grau():
+    centralidade = {}
+    for aeroporto_id in AeroPortos:
+        # A centralidade de grau é simplesmente o número de conexões diretas de um aeroporto
+        grau = len(Rotas[aeroporto_id])
+        centralidade[aeroporto_id] = grau
+    return centralidade
+
 # Implementação do Algoritmo de Dijkstra para encontrar o menor caminho entre dois aeroportos
 def dijkstra(matriz, origem, destino):
     ids = list(AeroPortos.keys())  # Lista de IDs dos aeroportos
@@ -94,11 +103,21 @@ def dijkstra(matriz, origem, destino):
 if __name__ == "__main__":
     matriz_adjacencia = construir_matriz_adjacencia()  # Gera a matriz de adjacência com as distâncias reais
 
+    # Cálculo da centralidade de grau dos aeroportos
+    centralidade = calcular_centralidade_grau()
+
+    # Exibe as centralidades
+    print("Centralidade de Grau dos Aeroportos:")
+    for aeroporto_id, grau in centralidade.items():
+        nome_aeroporto = AeroPortos[aeroporto_id]["nome"]
+        codigo = AeroPortos[aeroporto_id]["codigo"]
+        print(f"{nome_aeroporto} ({codigo}): {grau} conexões")
+
     origem, destino = 4, 1  # Exemplo: Salvador (SSA) para Guarulhos (GRU)
     caminho, distancia_total = dijkstra(matriz_adjacencia, origem, destino)  # Executa o algoritmo de Dijkstra
 
     if caminho:
-        print("Melhor rota:")
+        print("\nMelhor rota:")
         for i, aeroporto_id in enumerate(caminho):
             nome_aeroporto, codigo = AeroPortos[aeroporto_id]["nome"], AeroPortos[aeroporto_id]["codigo"]
             print(f"{i+1}. {nome_aeroporto} ({codigo})")  # Exibe a sequência de aeroportos na melhor rota
